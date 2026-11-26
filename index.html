@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#22302A;--muted:#4A544E;--bg:#FBF8F2;--card:#FFFFFF;--line:#E2D9C8;--gold:#8A5A1F;--done:#7d857f;}
+  :root{--ink:#22302A;--muted:#4A544E;--bg:#FBF8F2;--card:#FFFFFF;--line:#E2D9C8;--soft:#F6F1E7;--gold:#8A5A1F;--done:#7d857f;}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;line-height:1.5}
   header{background:var(--ink);color:#F2ECE0;padding:32px 20px 24px}
@@ -35,6 +35,7 @@
   li:first-child{border-top:0}
   label.item{display:flex;gap:12px;align-items:flex-start;padding:12px 2px;cursor:pointer}
   label.item input{width:22px;height:22px;margin:2px 0 0;accent-color:var(--ink);flex:0 0 auto;cursor:pointer}
+  label.item input:disabled{cursor:not-allowed;opacity:.4}
   .txt{flex:1}
   .txt b{font-weight:700}
   .txt .how{display:block;font-size:14px;color:var(--muted)}
@@ -43,22 +44,56 @@
   .who.Mom{background:#F7E6DA;color:#7A3A14}
   .who.Dylan{background:#EEE3F5;color:#5B2C7A}
   .who.Claude{background:#E6EFE8;color:#22302A}
-  li.done .txt{color:var(--done);text-decoration:line-through}
-  li.done .txt .how{text-decoration:none}
+  .req{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#7A3A14;border:1px solid #E7C6AE;border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:2px}
+  li.done .txt b{color:var(--done);text-decoration:line-through}
   body.hiding li.done{display:none}
   li.hidden{display:none}
   .order{counter-reset:step}
   .order li .txt b::before{counter-increment:step;content:counter(step) ". "}
+
+  /* decision / input panels */
+  .panel{background:var(--soft);border-radius:10px;padding:14px;margin:0 0 14px 34px;font-size:15px}
+  .panel label{display:block;font-weight:500;margin:10px 0 4px}
+  .panel label:first-child{margin-top:0}
+  .panel select,.panel input[type=text],.panel input[type=number],.panel textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-height:44px}
+  .panel textarea{min-height:180px;resize:vertical;line-height:1.5}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .row>div{flex:1;min-width:120px}
+  .opt{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px;margin-top:10px;font-size:14px}
+  .opt b{font-size:15px}
+  .opt ul{list-style:disc;padding-left:20px;margin:6px 0 0}
+  .opt li{border:0;padding:1px 0}
+  .tag{display:inline-block;font-size:11px;font-weight:700;background:#E6EFE8;color:#22302A;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+  .warn{color:#7A3A14}
+  .hint{font-size:13px;color:var(--muted);margin:6px 0 0}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;border:0;border-radius:999px;background:var(--ink);color:#fff;font:inherit;font-weight:500;font-size:15px;padding:0 18px;cursor:pointer;margin-top:10px}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .drop{display:block;border:2px dashed #CFC3AC;border-radius:10px;padding:18px;text-align:center;background:#fff;cursor:pointer;font-weight:500}
+  .drop input{display:none}
+  .thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .thumbs img{width:76px;height:76px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
+  .status{font-size:14px;margin-top:8px;min-height:1em}
+  [data-show]{display:none}
+  [data-show].on{display:block}
+
+  .send{background:var(--ink);color:#F2ECE0;border-radius:12px;padding:20px;margin-bottom:16px}
+  .send h2{color:#F2ECE0}
+  .send p{color:#D5CDBE;font-size:15px;margin:4px 0 10px}
+  .send pre{white-space:pre-wrap;background:rgba(255,255,255,.08);border-radius:8px;padding:12px;font-family:inherit;font-size:14px;color:#F2ECE0;max-height:260px;overflow:auto}
+  .send .btn{background:#E0B57A;color:var(--ink)}
+  .send .btn.ghost{background:transparent;color:#F2ECE0;border:1px solid rgba(255,255,255,.3)}
+
   footer{max-width:860px;margin:0 auto;padding:0 20px 40px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
   footer button{background:none;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;color:var(--muted);cursor:pointer}
-  @media (max-width:560px){label.item{flex-wrap:wrap}.who{order:-1}}
+  @media (max-width:560px){label.item{flex-wrap:wrap}.who{order:-1}.panel{margin-left:0}}
 </style>
 </head>
 <body>
 <header>
   <div class="wrap">
     <h1>Craeft &amp; Wela – Launch Checklist</h1>
-    <p class="sub">Everything left before the store goes live. Tap a task to check it off.</p>
+    <p class="sub">Everything left before the store goes live. Tap a task to check it off. Mom's choices and photos go to Life from this page.</p>
     <div class="deadlines">
       <span class="pill">Journal live by <b>Jan 1, 2027</b></span>
       <span class="pill">RheumNow shirts ready by <b>Jan 30, 2027</b></span>
@@ -79,46 +114,141 @@
     <label class="hide-done"><input type="checkbox" id="hideDone"> Hide finished</label>
   </div>
 
+  <!-- ================= BUSINESS ================= -->
   <section>
     <h2>Business &amp; legal <small class="sc"></small></h2>
     <ul>
-      <li data-id="tax-permit" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Get the Texas sales tax permit</b><span class="how">Free, online with the Texas Comptroller. Send Life the permit number.</span></span><span class="who Mom">Mom</span></label></li>
-      <li data-id="bank" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Open a business bank account</b><span class="how">Under the LLC name and EIN. Shopify pays sales into it.</span></span><span class="who Mom">Mom</span></label></li>
+      <li data-id="tax-permit" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Get the Texas sales tax permit</b><span class="req">Before launch</span><span class="how">Free, online with the Texas Comptroller. Life needs the permit number to turn on sales tax.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel">
+          <label for="f-permit">Sales tax permit number</label>
+          <input type="text" id="f-permit" data-key="permit" placeholder="Type it once you have it">
+        </div>
+      </li>
+
+      <li data-id="bank" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Decide: separate business bank account?</b><span class="req">Before launch</span><span class="how">Shopify and Etsy will both pay into whatever account is chosen here.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel">
+          <label for="f-bank">Mom's choice</label>
+          <select id="f-bank" data-key="bank">
+            <option value="">Choose one…</option>
+            <option value="new">Yes – open a new business account</option>
+            <option value="personal">No – use a personal account for now</option>
+          </select>
+          <div class="opt" data-show="bank=new"><b>Business account</b><ul><li>Keeps store money separate, which makes taxes much easier.</li><li>Open it under the LLC name with the EIN. Bring the LLC paperwork to the bank.</li><li>Many banks and credit unions have free small-business checking.</li></ul></div>
+          <div class="opt" data-show="bank=personal"><b>Personal account</b><ul><li>Fastest – nothing to open.</li><li>Store money and personal money mix together, so tracking sales for taxes takes more work.</li><li>Can switch to a business account later.</li></ul></div>
+        </div>
+      </li>
+
+      <li data-id="etsy-account" data-who="Mom" data-needs="bank"><label class="item"><input type="checkbox"><span class="txt"><b>Set up an Etsy seller account</b><span class="req">Before launch</span><span class="how">At etsy.com/sell, using the bank account chosen above. This is the Etsy shop the store links to. <span class="lock warn">Do this after the bank account decision.</span></span></span><span class="who Mom">Mom</span></label></li>
+
       <li data-id="llc" data-who="Mom" data-default="1"><label class="item"><input type="checkbox"><span class="txt"><b>LLC and EIN</b></span><span class="who Mom">Mom</span></label></li>
       <li data-id="john-ok" data-who="Mom" data-default="1"><label class="item"><input type="checkbox"><span class="txt"><b>OK from John and the group photo to sell Cushisms online</b></span><span class="who Mom">Mom</span></label></li>
     </ul>
   </section>
 
+  <!-- ================= SHOPIFY ================= -->
   <section>
     <h2>Shopify setup <small class="sc"></small></h2>
-    <p class="note">Backend settings in the Shopify admin, mostly under Settings.</p>
     <ul>
-      <li data-id="plan" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Pick a paid Shopify plan</b><span class="how">Before the free trial ends.</span></span><span class="who Life">Life</span></label></li>
-      <li data-id="payments" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Turn on payments</b><span class="how">Settings → Payments → Shopify Payments, linked to the business bank account.</span></span><span class="who Life">Life</span></label></li>
-      <li data-id="sales-tax" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Turn on Texas sales tax</b><span class="how">Settings → Taxes and duties → United States → Texas. Needs Mom's permit number.</span></span><span class="who Life">Life</span></label></li>
-      <li data-id="shipping" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Set shipping rates</b><span class="how">Needs the journal and shirt weights from Mom. Decide on a free-shipping amount.</span></span><span class="who Life">Life</span></label></li>
+      <li data-id="plan-pick" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Choose a Shopify plan</b><span class="req">Before launch</span><span class="how">Mom picks, Life signs up. Prices are what Shopify lists today and may change.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel">
+          <div class="row">
+            <div><label for="f-plan">Plan</label>
+              <select id="f-plan" data-key="plan">
+                <option value="">Choose one…</option>
+                <option value="basic">Basic (recommended)</option>
+                <option value="grow">Grow</option>
+                <option value="starter">Starter</option>
+              </select></div>
+            <div><label for="f-billing">Pay</label>
+              <select id="f-billing" data-key="billing">
+                <option value="">Choose one…</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly (cheaper per month)</option>
+              </select></div>
+          </div>
+          <div class="opt" data-show="plan=basic"><b>Basic</b><span class="tag">Best fit</span><ul><li>$39 a month, or $29 a month if paid yearly ($348 up front).</li><li>Keeps the full website as it is now.</li><li>Card fee: 2.9% + 30¢ per online sale.</li><li>Fine for one owner and a few products.</li></ul></div>
+          <div class="opt" data-show="plan=grow"><b>Grow</b><ul><li>$105 a month, or $79 a month if paid yearly.</li><li>Slightly lower card fees (2.7% + 30¢) and up to 5 staff logins.</li><li>Only worth it with a lot of sales – more than this shop needs to start.</li></ul></div>
+          <div class="opt" data-show="plan=starter"><b>Starter</b><ul><li>$5 a month.</li><li class="warn"><b>Does not include the website.</b> It only gives product links to share on social media, so the pages Life built would go away.</li><li>Not recommended for this shop.</li></ul></div>
+        </div>
+      </li>
+      <li data-id="plan" data-who="Life" data-needs="plan"><label class="item"><input type="checkbox"><span class="txt"><b>Sign up for the plan Mom picked</b><span class="how">Before the free trial ends. <span class="lock warn">Waiting on Mom's plan choice.</span></span></span><span class="who Life">Life</span></label></li>
+      <li data-id="payments" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Turn on payments</b><span class="how">Settings → Payments → Shopify Payments, linked to the bank account Mom chose.</span></span><span class="who Life">Life</span></label></li>
+      <li data-id="sales-tax" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Turn on Texas sales tax</b><span class="how">Settings → Taxes and duties → United States → Texas, with Mom's permit number.</span></span><span class="who Life">Life</span></label></li>
+      <li data-id="shipping" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Set shipping rates</b><span class="how">Uses the journal and shirt weights from Mom.</span></span><span class="who Life">Life</span></label></li>
       <li data-id="policies" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Fill in store policies</b><span class="how">Settings → Policies. Refund policy should match the Returns &amp; Exchanges page.</span></span><span class="who Life">Life</span></label></li>
-      <li data-id="domain2" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Connect craeftwela.com</b><span class="how">Same steps as before, but don't make it the primary domain.</span></span><span class="who Life">Life</span></label></li>
+
+      <li data-id="domain-info" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Tell Life where craeftwela.com was bought</b><span class="how">Life needs this to connect the second domain.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel">
+          <label for="f-registrar">Where was it bought?</label>
+          <select id="f-registrar" data-key="registrar">
+            <option value="">Choose one…</option>
+            <option>Northwest Registered Agent (same as craeftandwela.com)</option>
+            <option>GoDaddy</option>
+            <option>Namecheap</option>
+            <option>Squarespace (used to be Google Domains)</option>
+            <option>Wix</option>
+            <option>Other</option>
+            <option>Not sure</option>
+          </select>
+          <div data-show="registrar=Other"><label for="f-registrar-other">Which company?</label><input type="text" id="f-registrar-other" data-key="registrarOther"></div>
+          <label for="f-registrar-email">Email used to log in there</label>
+          <input type="text" id="f-registrar-email" data-key="registrarEmail" inputmode="email" autocomplete="off">
+          <p class="hint">Don't type a password here. Give it to Life in person.</p>
+        </div>
+      </li>
+      <li data-id="domain2" data-who="Life" data-needs="registrar"><label class="item"><input type="checkbox"><span class="txt"><b>Connect craeftwela.com</b><span class="how">Same steps as before, but don't make it the main domain. <span class="lock warn">Waiting on Mom's domain info.</span></span></span><span class="who Life">Life</span></label></li>
       <li data-id="domain1" data-who="Life" data-default="1"><label class="item"><input type="checkbox"><span class="txt"><b>craeftandwela.com connected as the main domain</b></span><span class="who Life">Life</span></label></li>
     </ul>
   </section>
 
+  <!-- ================= PRODUCTS ================= -->
   <section>
     <h2>Products &amp; photos <small class="sc"></small></h2>
+    <p class="note">Add photos below, then tap "Send to Life" and pick Mail or Gmail. Send to <b>lifey8@gmail.com</b>. Photos aren't saved on this page, so send them before closing it.</p>
     <h3>The Foreman's Journal</h3>
     <ul>
-      <li data-id="j-photos" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Take journal photos</b><span class="how">Both books together, a few inside pages, the set in use. Daylight, plain background. Send to Life.</span></span><span class="who Mom">Mom</span></label></li>
-      <li data-id="j-weigh" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Weigh and measure one journal set</b><span class="how">Send Life the weight and size.</span></span><span class="who Mom">Mom</span></label></li>
-      <li data-id="j-stock" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Count the sets left to sell</b><span class="how">After setting aside the friend copies.</span></span><span class="who Mom">Mom</span></label></li>
+      <li data-id="j-photos" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Take journal photos and send them to Life</b><span class="how">Both books together, a few inside pages, the set in use. Daylight, plain background.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel" data-upload="Journal photos"></div>
+      </li>
+      <li data-id="j-weigh" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Weigh and measure one journal set</b><span class="how">Weigh both books together on a kitchen or bathroom scale.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel">
+          <div class="row">
+            <div><label for="f-jlb">Weight – lb</label><input type="number" id="f-jlb" data-key="jLb" min="0" inputmode="decimal"></div>
+            <div><label for="f-joz">Weight – oz</label><input type="number" id="f-joz" data-key="jOz" min="0" inputmode="decimal"></div>
+          </div>
+          <label for="f-jsize">Size of one journal (inches)</label>
+          <input type="text" id="f-jsize" data-key="jSize" placeholder="e.g. 6 x 9 x 0.5">
+        </div>
+      </li>
+      <li data-id="j-stock" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Count the sets left to sell</b><span class="how">After setting aside the friend copies.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel"><label for="f-jstock">Sets to sell</label><input type="number" id="f-jstock" data-key="jStock" min="0" inputmode="numeric"></div>
+      </li>
       <li data-id="j-reviews" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Give sets to 4–6 couples for reviews</b><span class="how">Ask for honest feedback and a photo by late December.</span></span><span class="who Mom">Mom</span></label></li>
-      <li data-id="j-listing" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Add photos and stock, then set the journal to Active</b><span class="how">Claude can help once the photos are uploaded.</span></span><span class="who Life">Life</span></label></li>
+      <li data-id="j-listing" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Add photos and stock, then set the journal to Active</b></span><span class="who Life">Life</span></label></li>
     </ul>
     <h3>Cushisms Tee</h3>
     <ul>
       <li data-id="t-blanks" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Order black blanks and vinyl from Jiffy</b></span><span class="who Mom">Mom</span></label></li>
       <li data-id="t-press" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Press 3–5 shirts per size (S–3XL)</b><span class="how">By about Jan 20.</span></span><span class="who Mom">Mom</span></label></li>
-      <li data-id="t-photos" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Take shirt photos</b><span class="how">One laid flat, one worn. Send to Life.</span></span><span class="who Mom">Mom</span></label></li>
-      <li data-id="t-price" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Decide the online price</b><span class="how">Keep $20, or charge more online to cover shipping.</span></span><span class="who Mom">Mom</span></label></li>
+      <li data-id="t-photos" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Take shirt photos and send them to Life</b><span class="how">One laid flat, one worn.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel" data-upload="Shirt photos"></div>
+      </li>
+      <li data-id="t-weigh" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Weigh one folded shirt</b><span class="how">Use the biggest size.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel"><label for="f-toz">Weight – oz</label><input type="number" id="f-toz" data-key="tOz" min="0" inputmode="decimal"></div>
+      </li>
+      <li data-id="t-price" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Decide the online shirt price</b><span class="how">At RheumNow it's $20. Online, shipping is added on top.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel">
+          <label for="f-tprice">Online price</label>
+          <select id="f-tprice" data-key="tPrice">
+            <option value="">Choose one…</option>
+            <option>$20 – same as RheumNow</option>
+            <option>$22</option>
+            <option>$25</option>
+            <option>Other</option>
+          </select>
+          <div data-show="tPrice=Other"><label for="f-tprice-other">Price</label><input type="text" id="f-tprice-other" data-key="tPriceOther" placeholder="$"></div>
+        </div>
+      </li>
       <li data-id="t-listing" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Add photos, size chart and stock; set Active the week of RheumNow</b></span><span class="who Life">Life</span></label></li>
     </ul>
     <h3>Shipping supplies</h3>
@@ -127,29 +257,65 @@
     </ul>
   </section>
 
+  <!-- ================= WEBSITE ================= -->
   <section>
-    <h2>Website polish <small class="sc"></small></h2>
+    <h2>Website <small class="sc"></small></h2>
     <ul>
-      <li data-id="logo" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Upload the C&amp;W logo for the header</b><span class="how">Claude adds it once it's uploaded.</span></span><span class="who Life">Life</span></label></li>
-      <li data-id="coll-width" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Widen collection descriptions</b><span class="how">Theme editor → Collections → description text → Width: Fill, Max width: None.</span></span><span class="who Life">Life</span></label></li>
+      <li data-id="logo-pick" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Decide on the logo and send it to Life</b><span class="how">Shows at the top of every page.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel">
+          <label for="f-logo">Mom's choice</label>
+          <select id="f-logo" data-key="logo">
+            <option value="">Choose one…</option>
+            <option value="have">Use the logo I already have</option>
+            <option value="text">No logo for now – just the name in text</option>
+            <option value="new">I want a new logo made first</option>
+          </select>
+          <div data-show="logo=have" data-upload="Logo"></div>
+          <div class="opt" data-show="logo=text">The site will show "Craeft &amp; Wela" in the site's font. A logo can be added any time.</div>
+          <div class="opt" data-show="logo=new"><label for="f-logo-notes" style="margin-top:0">Ideas for the new logo (colors, style, anything)</label><textarea id="f-logo-notes" data-key="logoNotes" style="min-height:100px"></textarea></div>
+        </div>
+      </li>
+      <li data-id="logo" data-who="Life" data-needs="logo"><label class="item"><input type="checkbox"><span class="txt"><b>Upload the logo to the site header</b><span class="how"><span class="lock warn">Waiting on Mom's logo choice.</span></span></span><span class="who Life">Life</span></label></li>
+
+      <li data-id="blog-pick" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Decide on the blog</b><span class="how">"Where Wit Meets Wellness" is in the menu but has no posts yet.</span></span><span class="who Mom">Mom</span></label>
+        <div class="panel">
+          <label for="f-blog">Mom's choice</label>
+          <select id="f-blog" data-key="blog">
+            <option value="">Choose one…</option>
+            <option value="write">Write the first post now</option>
+            <option value="hide">Hide the blog for now</option>
+          </select>
+          <div data-show="blog=write">
+            <label for="f-blog-title">Post title</label>
+            <input type="text" id="f-blog-title" data-key="blogTitle">
+            <label for="f-blog-body">Post</label>
+            <textarea id="f-blog-body" data-key="blogBody" placeholder="Write it here. It saves as you type."></textarea>
+            <div data-upload="Blog photo"></div>
+          </div>
+          <div class="opt" data-show="blog=hide">Life will take "Blog" out of the menu. It can come back whenever there's a post.</div>
+        </div>
+      </li>
+      <li data-id="blog" data-who="Life" data-needs="blog"><label class="item"><input type="checkbox"><span class="txt"><b>Post Mom's blog, or hide Blog from the menu</b><span class="how"><span class="lock warn">Waiting on Mom's blog choice.</span></span></span><span class="who Life">Life</span></label></li>
+
       <li data-id="announce" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Update the announcement bar</b><span class="how">Something current, like the journal launch.</span></span><span class="who Life">Life</span></label></li>
+      <li data-id="coll-width" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Widen collection descriptions</b><span class="how">Theme editor → Collections → description text → Width: Fill, Max width: None.</span></span><span class="who Life">Life</span></label></li>
       <li data-id="faq" data-who="Claude"><label class="item"><input type="checkbox"><span class="txt"><b>Fix the FAQ</b><span class="how">Remove "printed just for you," the [2–5]/[3–7] day placeholders and "order by Dec 14" once shipping times are known.</span></span><span class="who Claude">Claude</span></label></li>
-      <li data-id="blog" data-who="Mom"><label class="item"><input type="checkbox"><span class="txt"><b>Write the first blog post</b><span class="how">Or hide "Blog" from the menu until there is one.</span></span><span class="who Mom">Mom</span></label></li>
       <li data-id="pages" data-who="Claude" data-default="1"><label class="item"><input type="checkbox"><span class="txt"><b>Our Story, Small Crafts, Returns, menus and RheumNow 2027 page</b></span><span class="who Claude">Claude</span></label></li>
     </ul>
   </section>
 
+  <!-- ================= DYLAN ================= -->
   <section>
     <h2>Dylan's Small Crafts <small class="sc"></small></h2>
     <ul>
-      <li data-id="etsy" data-who="Dylan"><label class="item"><input type="checkbox"><span class="txt"><b>Set up her Etsy shop</b><span class="how">etsy.com/sell: shop name, bank info, shipping. Use the table photo without her as the banner.</span></span><span class="who Dylan">Dylan</span></label></li>
-      <li data-id="etsy-listings" data-who="Dylan"><label class="item"><input type="checkbox"><span class="txt"><b>Add her first 3–5 listings</b><span class="how">Reshoot bracelets out of the bags, flat, in daylight.</span></span><span class="who Dylan">Dylan</span></label></li>
-      <li data-id="etsy-link" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Send Claude the Etsy link</b><span class="how">"Coming soon" on her page becomes a button.</span></span><span class="who Life">Life</span></label></li>
+      <li data-id="etsy-listings" data-who="Dylan"><label class="item"><input type="checkbox"><span class="txt"><b>Add her first 3–5 listings to the Etsy shop</b><span class="how">After Mom's Etsy seller account is set up. Reshoot bracelets out of the bags, flat, in daylight.</span></span><span class="who Dylan">Dylan</span></label></li>
+      <li data-id="etsy-link" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Send Claude the Etsy shop link</b><span class="how">"Coming soon" on her page becomes a button.</span></span><span class="who Life">Life</span></label></li>
       <li data-id="requests" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Decide where custom requests go</b><span class="how">Now: craeftwela@gmail.com. Or add Dylan's own email to her page.</span></span><span class="who Life">Life</span></label></li>
       <li data-id="dylan-page" data-who="Claude" data-default="1"><label class="item"><input type="checkbox"><span class="txt"><b>Small Crafts page with slideshow and request form</b></span><span class="who Claude">Claude</span></label></li>
     </ul>
   </section>
 
+  <!-- ================= LAUNCH ================= -->
   <section>
     <h2>Test &amp; launch <small class="sc"></small></h2>
     <p class="note">Last, in this order, the week before New Year's.</p>
@@ -169,53 +335,171 @@
       <li data-id="social-shop" data-who="Life"><label class="item"><input type="checkbox"><span class="txt"><b>Connect a Facebook/Instagram shop</b><span class="how">Optional, through Shopify.</span></span><span class="who Life">Life</span></label></li>
     </ul>
   </section>
+
+  <!-- ================= SEND ================= -->
+  <div class="send" id="sendBox">
+    <h2>Send Mom's answers to Life</h2>
+    <p>Everything Mom has filled in so far goes to lifey8@gmail.com. Send whenever there's something new – it's fine to send more than once.</p>
+    <pre id="summary"></pre>
+    <button class="btn" type="button" id="sendAnswers">Email to Life</button>
+    <button class="btn ghost" type="button" id="copyAnswers">Copy text</button>
+    <div class="status" id="sendStatus" aria-live="polite"></div>
+  </div>
 </main>
 
 <footer>
-  <span>Checkmarks are saved on this device and browser only.</span>
-  <button type="button" id="reset">Reset checkmarks</button>
+  <span>Checkmarks and answers are saved on this device and browser only.</span>
+  <button type="button" id="reset">Reset this page</button>
 </footer>
+
+<template id="uploadTpl">
+  <label class="drop">📷 Add photos<input type="file" accept="image/*" multiple></label>
+  <div class="thumbs"></div>
+  <button class="btn" type="button" disabled>Send to Life</button>
+  <div class="status" aria-live="polite"></div>
+</template>
 
 <script>
 (function(){
-  var KEY='cw-checklist-v1', store={};
-  try{ store=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ store={}; }
+  var KEY='cw-checklist-v2', store={checks:{},fields:{}};
+  try{ var s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.checks) store=s; }catch(e){}
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} }
-  var items=[].slice.call(document.querySelectorAll('li[data-id]'));
-  items.forEach(function(li){
-    var id=li.dataset.id, box=li.querySelector('input');
-    var checked = (id in store) ? store[id] : li.dataset.default==='1';
-    box.checked=checked; li.classList.toggle('done',checked);
-    box.addEventListener('change',function(){ store[id]=box.checked; li.classList.toggle('done',box.checked); save(); update(); });
+  function $(q,el){return (el||document).querySelector(q);}
+  function $$(q,el){return [].slice.call((el||document).querySelectorAll(q));}
+
+  /* ---------- fields ---------- */
+  var fields=$$('[data-key]');
+  fields.forEach(function(f){
+    var k=f.dataset.key;
+    if(store.fields[k]!=null) f.value=store.fields[k];
+    f.addEventListener('input',function(){ store.fields[k]=f.value; save(); refresh(); });
+    f.addEventListener('change',function(){ store.fields[k]=f.value; save(); refresh(); });
   });
-  var current='all';
-  function update(){
-    var vis=items.filter(function(li){ return current==='all'||li.dataset.who===current; });
-    var done=vis.filter(function(li){ return li.querySelector('input').checked; }).length;
-    document.getElementById('bar').style.width=(vis.length?done/vis.length*100:0)+'%';
-    document.getElementById('count').textContent=done+' of '+vis.length+' done'+(current==='all'?'':' for '+current);
-    items.forEach(function(li){ li.classList.toggle('hidden', !(current==='all'||li.dataset.who===current)); });
-    [].forEach.call(document.querySelectorAll('section'),function(sec){
-      var lis=[].slice.call(sec.querySelectorAll('li[data-id]')).filter(function(li){return !li.classList.contains('hidden');});
-      var d=lis.filter(function(li){return li.querySelector('input').checked;}).length;
-      sec.style.display=lis.length?'':'none';
-      var sc=sec.querySelector('.sc'); if(sc) sc.textContent=d+'/'+lis.length;
+  function val(k){ return (store.fields[k]||'').trim(); }
+
+  /* ---------- checkboxes ---------- */
+  var items=$$('li[data-id]');
+  items.forEach(function(li){
+    var id=li.dataset.id, box=$('label.item input',li);
+    var checked=(id in store.checks)?store.checks[id]:li.dataset.default==='1';
+    box.checked=checked;
+    box.addEventListener('change',function(){ store.checks[id]=box.checked; save(); refresh(); });
+  });
+
+  /* ---------- uploads (share sheet) ---------- */
+  $$('[data-upload]').forEach(function(host){
+    var label=host.dataset.upload;
+    host.appendChild(document.importNode($('#uploadTpl').content,true));
+    var input=$('input',host), thumbs=$('.thumbs',host), btn=$('.btn',host), status=$('.status',host), files=[];
+    input.addEventListener('change',function(){
+      files=files.concat([].slice.call(input.files)); input.value='';
+      thumbs.innerHTML='';
+      files.forEach(function(f){ var img=document.createElement('img'); img.alt=f.name; img.src=URL.createObjectURL(f); thumbs.appendChild(img); });
+      btn.disabled=!files.length;
+      status.textContent=files.length+' photo'+(files.length===1?'':'s')+' ready. Tap Send, choose Mail or Gmail, and send to lifey8@gmail.com.';
     });
+    btn.addEventListener('click',function(){
+      var data={files:files,title:'Craeft & Wela – '+label,text:'Craeft & Wela – '+label};
+      if(navigator.canShare && navigator.canShare({files:files})){
+        navigator.share(data).then(function(){ status.textContent='Sent. Check this task off once Life has them.'; })
+          .catch(function(e){ if(e&&e.name!=='AbortError') status.textContent='Couldn\'t open sharing. Text or email the photos to Life instead.'; });
+      } else {
+        status.textContent='This browser can\'t attach photos from here. Open the page on a phone, or email the photos to lifey8@gmail.com directly.';
+      }
+    });
+  });
+
+  /* ---------- summary ---------- */
+  var labels={new:'Yes – new business account',personal:'No – personal account for now',
+    basic:'Basic',grow:'Grow',starter:'Starter',monthly:'monthly',yearly:'yearly',
+    have:'Use existing logo (sending it)',text:'No logo – name in text for now',
+    write:'Writing the first post',hide:'Hide the blog for now'};
+  function L(v){ return labels[v]||v; }
+  function buildSummary(){
+    var out=[];
+    function add(name,v){ if(v) out.push(name+': '+v); }
+    add('Sales tax permit #',val('permit'));
+    add('Bank account',L(val('bank')));
+    if(val('plan')) add('Shopify plan',L(val('plan'))+(val('billing')?', paid '+L(val('billing')):''));
+    var reg=val('registrar')==='Other'?val('registrarOther')||'Other':val('registrar');
+    add('craeftwela.com bought at',reg);
+    add('Domain login email',val('registrarEmail'));
+    var w=[]; if(val('jLb')) w.push(val('jLb')+' lb'); if(val('jOz')) w.push(val('jOz')+' oz');
+    add('Journal set weight',w.join(' '));
+    add('Journal size',val('jSize'));
+    add('Journal sets to sell',val('jStock'));
+    add('Shirt weight',val('tOz')?val('tOz')+' oz':'');
+    add('Online shirt price',val('tPrice')==='Other'?val('tPriceOther'):val('tPrice'));
+    add('Logo',L(val('logo')));
+    if(val('logo')==='new') add('Logo ideas',val('logoNotes'));
+    add('Blog',L(val('blog')));
+    if(val('blog')==='write'){
+      if(val('blogTitle')) out.push('\nBlog title: '+val('blogTitle'));
+      if(val('blogBody')) out.push(val('blogBody'));
+    }
+    return out.length?'Craeft & Wela – answers from Mom\n\n'+out.join('\n'):'';
   }
-  [].forEach.call(document.querySelectorAll('.filter'),function(b){
+
+  /* ---------- refresh ---------- */
+  var current='all';
+  function refresh(){
+    // conditional blocks
+    $$('[data-show]').forEach(function(el){
+      var p=el.dataset.show.split('='); el.classList.toggle('on', val(p[0])===p[1]);
+    });
+    // dependencies
+    items.forEach(function(li){
+      var box=$('label.item input',li), need=li.dataset.needs;
+      var ok=!need||!!val(need);
+      if(need==='bank') ok=!!val('bank');
+      box.disabled=!ok&&!box.checked;
+      var lock=$('.lock',li); if(lock) lock.style.display=ok?'none':'';
+      li.classList.toggle('done',box.checked);
+    });
+    // progress
+    var vis=items.filter(function(li){ return current==='all'||li.dataset.who===current; });
+    var done=vis.filter(function(li){ return $('label.item input',li).checked; }).length;
+    $('#bar').style.width=(vis.length?done/vis.length*100:0)+'%';
+    $('#count').textContent=done+' of '+vis.length+' done'+(current==='all'?'':' for '+current);
+    items.forEach(function(li){ li.classList.toggle('hidden', !(current==='all'||li.dataset.who===current)); });
+    $$('section').forEach(function(sec){
+      var lis=$$('li[data-id]',sec).filter(function(li){return !li.classList.contains('hidden');});
+      var d=lis.filter(function(li){return $('label.item input',li).checked;}).length;
+      sec.style.display=lis.length?'':'none';
+      var sc=$('.sc',sec); if(sc) sc.textContent=d+'/'+lis.length;
+    });
+    // summary
+    var s=buildSummary();
+    $('#summary').textContent=s||'Nothing filled in yet.';
+    $('#sendAnswers').disabled=$('#copyAnswers').disabled=!s;
+    $('#sendBox').style.display=(current==='all'||current==='Mom')?'':'none';
+  }
+
+  $$('.filter').forEach(function(b){
     b.addEventListener('click',function(){
       current=b.dataset.who;
-      [].forEach.call(document.querySelectorAll('.filter'),function(x){x.setAttribute('aria-pressed', x===b?'true':'false');});
-      update();
+      $$('.filter').forEach(function(x){x.setAttribute('aria-pressed', x===b?'true':'false');});
+      refresh();
     });
   });
-  var hd=document.getElementById('hideDone');
-  hd.addEventListener('change',function(){ document.body.classList.toggle('hiding',hd.checked); });
-  document.getElementById('reset').addEventListener('click',function(){
-    if(!window.confirm('Clear all checkmarks on this device?')) return;
-    store={}; save(); location.reload();
+  $('#hideDone').addEventListener('change',function(e){ document.body.classList.toggle('hiding',e.target.checked); });
+
+  function copy(text,status){
+    if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){ status.textContent='Copied. Paste it in an email to lifey8@gmail.com.'; },function(){ status.textContent='Couldn\'t copy – select the text above and copy it.'; }); }
+    else status.textContent='Select the text above and copy it.';
+  }
+  $('#sendAnswers').addEventListener('click',function(){
+    var t=buildSummary();
+    window.location.href='mailto:lifey8@gmail.com?subject='+encodeURIComponent('Craeft & Wela – answers from Mom')+'&body='+encodeURIComponent(t);
+    $('#sendStatus').textContent='Opening email… If nothing opens, tap Copy text and email it to lifey8@gmail.com.';
   });
-  update();
+  $('#copyAnswers').addEventListener('click',function(){ copy(buildSummary(),$('#sendStatus')); });
+
+  $('#reset').addEventListener('click',function(){
+    if(!window.confirm('Clear all checkmarks and answers on this device?')) return;
+    try{ localStorage.removeItem(KEY); }catch(e){} location.reload();
+  });
+  refresh();
 })();
 </script>
 </body>
